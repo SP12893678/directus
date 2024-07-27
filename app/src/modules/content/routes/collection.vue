@@ -304,6 +304,7 @@ function clearFilters() {
 			:header-shadow="currentLayout?.headerShadow"
 			:sidebar-shadow="currentLayout?.sidebarShadow"
 		>
+		
 			<template #title-outer:prepend>
 				<v-button class="header-icon" :class="{ archive }" rounded icon secondary disabled>
 					<v-icon :name="archive ? 'archive' : currentCollection.icon" :color="currentCollection.color" />

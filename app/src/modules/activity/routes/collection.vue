@@ -9,6 +9,10 @@ import { mergeFilters } from '@directus/utils';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ActivityNavigation from '../components/navigation.vue';
+import { getCollectionRoute } from '@/utils/get-route';
+import { useRouter } from 'vue-router';
+import { unexpectedError } from '@/utils/unexpected-error';
+import BookmarkAdd from '@/views/private/components/bookmark-add.vue';
 
 defineProps<{
 	primaryKey?: string;
@@ -16,13 +20,63 @@ defineProps<{
 
 const { t } = useI18n();
 
-const { layout, layoutOptions, layoutQuery, filter, search } = usePreset(ref('directus_activity'));
+const { 
+	layout, 
+	layoutOptions, 
+	layoutQuery, 
+	filter, 
+	search,
+	bookmarkExists,
+	saveCurrentAsBookmark,
+	bookmarkTitle,
+	resetPreset,
+	bookmarkSaved,
+	bookmarkIsMine,
+	refreshInterval,
+	busy: bookmarkSaving,
+	clearLocalSave,
+} = usePreset(ref('directus_activity'));
 
 const { layoutWrapper } = useLayout(layout);
 
 const currentLayout = useExtension('layout', layout);
 
 const roleFilter = ref<Filter | null>(null);
+
+const router = useRouter();
+
+const { bookmarkDialogActive, creatingBookmark, createBookmark } = useBookmarks();
+
+function useBookmarks() {
+	const bookmarkDialogActive = ref(false);
+	const creatingBookmark = ref(false);
+
+	return {
+		bookmarkDialogActive,
+		creatingBookmark,
+		createBookmark,
+	};
+
+	async function createBookmark(bookmark: any) {
+		creatingBookmark.value = true;
+
+		try {
+			const newBookmark = await saveCurrentAsBookmark({
+				bookmark: bookmark.name,
+				icon: bookmark.icon,
+				color: bookmark.color,
+			});
+
+			router.push(`${getCollectionRoute(newBookmark.collection)}?bookmark=${newBookmark.id}`);
+
+			bookmarkDialogActive.value = false;
+		} catch (error) {
+			unexpectedError(error);
+		} finally {
+			creatingBookmark.value = false;
+		}
+	}
+}
 </script>
 
 <template>
@@ -44,6 +98,7 @@ const roleFilter = ref<Filter | null>(null);
 			:header-shadow="currentLayout?.headerShadow"
 		>
 			<template #title-outer:prepend>
+				xzczx
 				<v-button class="header-icon" rounded disabled icon secondary>
 					<v-icon name="access_time" />
 				</v-button>
@@ -51,6 +106,55 @@ const roleFilter = ref<Filter | null>(null);
 
 			<template #actions:prepend>
 				<component :is="`layout-actions-${layout}`" v-bind="layoutState" />
+			</template>
+
+			<template #title-outer:append>
+				<div class="bookmark-controls">
+					<bookmark-add
+						v-if="!bookmark"
+						v-model="bookmarkDialogActive"
+						class="add"
+						:saving="creatingBookmark"
+						@save="createBookmark"
+					>
+						<template #activator="{ on }">
+							<v-icon v-tooltip.right="t('create_bookmark')" class="toggle" clickable name="bookmark" @click="on" />
+						</template>
+					</bookmark-add>
+
+					<v-icon v-else-if="bookmarkSaved" class="saved" name="bookmark" filled />
+
+					<template v-else-if="bookmarkIsMine">
+						<v-icon
+							v-tooltip.bottom="t('update_bookmark')"
+							class="save"
+							clickable
+							name="bookmark_save"
+							@click="savePreset()"
+						/>
+					</template>
+
+					<bookmark-add
+						v-else
+						v-model="bookmarkDialogActive"
+						class="add"
+						:saving="creatingBookmark"
+						@save="createBookmark"
+					>
+						<template #activator="{ on }">
+							<v-icon class="toggle" name="bookmark" clickable @click="on" />
+						</template>
+					</bookmark-add>
+
+					<v-icon
+						v-if="bookmark && !bookmarkSaving && bookmarkSaved === false"
+						v-tooltip.bottom="t('reset_bookmark')"
+						name="settings_backup_restore"
+						clickable
+						class="clear"
+						@click="clearLocalSave"
+					/>
+				</div>
 			</template>
 
 			<template #actions>
