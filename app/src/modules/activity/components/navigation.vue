@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user';
 import { Filter } from '@directus/types';
-import { computed } from 'vue';
+import { computed,ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import NavigationItem from './navigation-item.vue';
+import { useCollectionsStore } from '@/stores/collections';
 
 const props = defineProps<{
 	filter?: Filter;
@@ -12,11 +14,14 @@ const emit = defineEmits(['update:filter']);
 
 const { t } = useI18n();
 
+const search = ref('');
+const collectionsStore = useCollectionsStore();
 const userStore = useUserStore();
 const currentUserID = computed(() => userStore.currentUser?.id);
 
 const filterField = computed(() => Object.keys(props.filter ?? {})[0] ?? null);
 const filterValue = computed(() => Object.values(props.filter ?? {})[0]?._eq ?? null);
+const collection = computed(() => collectionsStore.getCollection("directus_activity"));
 
 function setNavFilter(key: string, value: any) {
 	emit('update:filter', {
@@ -54,7 +59,13 @@ function clearNavFilter() {
 				<v-text-overflow :text="t('my_activity')" />
 			</v-list-item-content>
 		</v-list-item>
-
+cxz
+		<navigation-item
+			show-hidden
+			:collection="collection"
+			:search="search"
+		/>
+czxc
 		<v-divider />
 
 		<v-list-item
