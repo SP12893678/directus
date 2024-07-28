@@ -12,7 +12,12 @@ export default defineModule({
 			name: 'activity-collection',
 			path: '',
 			component: ActivityCollection,
-			props: true,
+			props: (route) => {
+				return {
+					primaryKey: route.params.primaryKey,
+					bookmark: route.query.bookmark,
+				};
+			},
 			children: [
 				{
 					name: 'activity-item',

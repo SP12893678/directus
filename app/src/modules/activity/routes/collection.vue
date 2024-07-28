@@ -6,7 +6,7 @@ import SearchInput from '@/views/private/components/search-input.vue';
 import { useLayout } from '@directus/composables';
 import { Filter } from '@directus/types';
 import { mergeFilters } from '@directus/utils';
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import ActivityNavigation from '../components/navigation.vue';
 import { getCollectionRoute } from '@/utils/get-route';
@@ -14,11 +14,13 @@ import { useRouter } from 'vue-router';
 import { unexpectedError } from '@/utils/unexpected-error';
 import BookmarkAdd from '@/views/private/components/bookmark-add.vue';
 
-defineProps<{
+const props = defineProps<{
 	primaryKey?: string;
+	bookmark?: string;
 }>();
 
 const { t } = useI18n();
+const bookmarkID = computed(() => (props.bookmark ? +props.bookmark : null));
 
 const { 
 	layout, 
@@ -35,7 +37,7 @@ const {
 	refreshInterval,
 	busy: bookmarkSaving,
 	clearLocalSave,
-} = usePreset(ref('directus_activity'));
+} = usePreset(ref('directus_activity'),bookmarkID);
 
 const { layoutWrapper } = useLayout(layout);
 
@@ -98,7 +100,6 @@ function useBookmarks() {
 			:header-shadow="currentLayout?.headerShadow"
 		>
 			<template #title-outer:prepend>
-				xzczx
 				<v-button class="header-icon" rounded disabled icon secondary>
 					<v-icon name="access_time" />
 				</v-button>
@@ -164,7 +165,9 @@ function useBookmarks() {
 			<template #navigation>
 				<activity-navigation v-model:filter="roleFilter" />
 			</template>
-
+321321323213213
+{{filter}} {{props.bookmark}}
+44444
 			<component :is="`layout-${layout}`" v-bind="layoutState">
 				<template #no-results>
 					<v-info :title="t('no_results')" icon="search" center>
@@ -178,9 +181,9 @@ function useBookmarks() {
 					</v-info>
 				</template>
 			</component>
-
+			CXZCXZ
 			<router-view name="detail" :primary-key="primaryKey" />
-
+CXZCZXCZXCXC
 			<template #sidebar>
 				<sidebar-detail icon="info" :title="t('information')" close>
 					<div v-md="t('page_help_activity_collection')" class="page-description" />

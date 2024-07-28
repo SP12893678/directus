@@ -9,6 +9,7 @@ import { orderBy } from 'lodash';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import NavigationBookmark from './navigation-bookmark.vue';
+import NavigationItemContent from './navigation-item-content.vue';
 import { useRoute } from 'vue-router';
 import { useGroupable } from '@directus/composables';
 
@@ -31,7 +32,7 @@ const childBookmarks = computed(() => getChildBookmarks(props.collection));
 
 const isGroup = computed(() => childCollections.value.length > 0 || childBookmarks.value.length > 0);
 
-const groupScope = 'content-navigation';
+const groupScope = 'v-list';
 const groupValue = props.collection.collection;
 
 const { active: isGroupOpen } = useGroupable({
@@ -91,8 +92,12 @@ function getChildBookmarks(collection: Collection) {
 
 <template>
 <div>
+	11
+	{{groupValue}}
+	{{groupScope}}
+	22
 	
-	<!-- <v-list-group
+	<v-list-group
 		v-context-menu="hasContextMenu ? 'contextMenu' : null"
 		:to="to"
 		:scope="groupScope"
@@ -100,9 +105,16 @@ function getChildBookmarks(collection: Collection) {
 		:query="isGroupOpen && isBookmarkActive"
 		:open="collection.meta?.collapse === 'locked'"
 		:arrow-placement="collection.meta?.collapse === 'locked' ? false : 'after'"
-	> -->
+	>
+		<template #activator>
+			<navigation-item-content
+				:search="search"
+				:name="t('bookmarks')"
+				icon="bookmark"
+			/>
+		</template>
 		<navigation-bookmark v-for="bookmark in childBookmarks" :key="bookmark.id" :bookmark="bookmark" />
-	<!-- </v-list-group> -->
+	</v-list-group>
 	
 </div>
 </template>

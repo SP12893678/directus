@@ -56,7 +56,6 @@ const groupActive = computed(() => groupableActive.value || props.open);
 function onClick(event: MouseEvent) {
 	if (props.to) return null;
 	if (props.clickable) return emit('click', event);
-
 	event.stopPropagation();
 	toggle();
 }
