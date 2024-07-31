@@ -92,11 +92,6 @@ function getChildBookmarks(collection: Collection) {
 
 <template>
 <div>
-	11
-	{{groupValue}}
-	{{groupScope}}
-	22
-	
 	<v-list-group
 		v-context-menu="hasContextMenu ? 'contextMenu' : null"
 		:to="to"
@@ -109,13 +104,13 @@ function getChildBookmarks(collection: Collection) {
 		<template #activator>
 			<navigation-item-content
 				:search="search"
-				:name="t('bookmarks')"
-				icon="bookmark"
+				:name="t('all_activity')"
+				icon="access_time"
+				:color="null"
 			/>
 		</template>
 		<navigation-bookmark v-for="bookmark in childBookmarks" :key="bookmark.id" :bookmark="bookmark" />
 	</v-list-group>
-	
 </div>
 </template>
 
