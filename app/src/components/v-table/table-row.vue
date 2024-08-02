@@ -2,6 +2,7 @@
 import type { ShowSelect } from '@directus/extensions';
 import { computed } from 'vue';
 import type { Header, Item } from './types';
+import { useClipboard } from '@/composables/use-clipboard';
 
 const props = withDefaults(
 	defineProps<{
@@ -14,6 +15,7 @@ const props = withDefaults(
 		sortedManually?: boolean;
 		hasClickListener?: boolean;
 		height?: number;
+		copyable?:boolean;
 	}>(),
 	{
 		showSelect: 'none',
@@ -23,10 +25,13 @@ const props = withDefaults(
 		sortedManually: false,
 		hasClickListener: false,
 		height: 48,
+		copyable: false,
 	},
 );
 
 defineEmits(['click', 'item-selected']);
+
+const { copyToClipboard, pasteFromClipboard } = useClipboard();
 
 const cssHeight = computed(() => {
 	return {
@@ -34,6 +39,14 @@ const cssHeight = computed(() => {
 		renderTemplateImage: props.height - 16 + 'px',
 	};
 });
+
+function onCopy(event, item) {
+	event.stopPropagation();
+	console.log("event", event)
+	console.log("event", item)
+	copyToClipboard(item);
+}
+
 </script>
 
 <template>
@@ -67,6 +80,7 @@ const cssHeight = computed(() => {
 				/>
 				<value-null v-else />
 			</slot>
+			<v-icon v-if="copyable" class="clipboard-icon" name="content_copy" @click="onCopy($event,item[header.value])" />
 		</td>
 
 		<td class="spacer cell" />
@@ -89,6 +103,7 @@ const cssHeight = computed(() => {
 		text-overflow: ellipsis;
 		background-color: var(--v-table-background-color, transparent);
 		border-bottom: var(--theme--border-width) solid var(--theme--border-color-subdued);
+		position: relative;
 
 		&:last-child {
 			padding: 0 12px;
@@ -97,6 +112,23 @@ const cssHeight = computed(() => {
 		&.select {
 			display: flex;
 			align-items: center;
+		}
+
+		.clipboard-icon {
+			--v-icon-color: var(--theme--foreground-subdued);
+			--v-icon-color-hover: var(--theme--foreground);
+			position: absolute;
+			right: 0;
+			top: 0;
+			opacity: 0;
+			visibility: hidden;
+			transform: translate(-50%, 50%);
+			transition: .3s;
+		}
+
+		&:hover .clipboard-icon {
+			opacity: 1;
+			visibility: visible;
 		}
 	}
 

@@ -40,6 +40,7 @@ const props = withDefaults(
 		inline?: boolean;
 		disabled?: boolean;
 		clickable?: boolean;
+		copyable?: boolean;
 	}>(),
 	{
 		itemKey: 'id',
@@ -60,6 +61,7 @@ const props = withDefaults(
 		inline: false,
 		disabled: false,
 		clickable: true,
+		copyable: false,
 	},
 );
 
@@ -319,6 +321,7 @@ function updateSort(newSort: Sort) {
 						:sorted-manually="internalSort.by === manualSortKey"
 						:has-click-listener="!disabled && clickable"
 						:height="rowHeight"
+						:copyable="copyable"
 						@click="!disabled && clickable ? $emit('click:row', { item: element, event: $event }) : null"
 						@item-selected="
 							onItemSelected({

@@ -72,6 +72,7 @@ const items = computed(() => {
 
 <template>
 	<div class="display-labels">
+		
 		<template v-if="!showAsDot">
 			<v-chip
 				v-for="item in items"

@@ -131,6 +131,7 @@ function removeField(fieldKey: string) {
 			:manual-sort-key="sortField"
 			allow-header-reorder
 			selection-use-keys
+			copyable
 			@click:row="onRowClick"
 			@update:sort="onSortChange"
 			@manual-sort="changeManualSort"
