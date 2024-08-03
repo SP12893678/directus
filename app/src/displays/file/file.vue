@@ -46,7 +46,7 @@ const imageThumbnail = computed(() => {
 		<span v-if="fileExtension" class="extension">
 			{{ fileExtension }}
 		</span>
-
+	
 		<v-icon v-else name="folder_open" />
 	</div>
 </template>

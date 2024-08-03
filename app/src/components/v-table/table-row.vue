@@ -47,10 +47,19 @@ function onCopy(event, item) {
 	copyToClipboard(item);
 }
 
+function onClick(event) {
+	console.log("onClick get")
+
+	if (window.getSelection().toString()) {
+        console.log("event get")
+      }
+	// emit('click', event)
+}
+
 </script>
 
 <template>
-	<tr class="table-row" :class="{ subdued: subdued, clickable: hasClickListener }" @click="$emit('click', $event)">
+	<tr class="table-row" :class="{ subdued: subdued, clickable: hasClickListener }" @click="onClick">
 		<td v-if="showManualSort" class="manual cell" @click.stop>
 			<v-icon name="drag_handle" class="drag-handle" :class="{ 'sorted-manually': sortedManually }" />
 		</td>
@@ -80,7 +89,7 @@ function onCopy(event, item) {
 				/>
 				<value-null v-else />
 			</slot>
-			<v-icon v-if="copyable" class="clipboard-icon" name="content_copy" @click="onCopy($event,item[header.value])" />
+			<!-- <v-icon v-if="copyable" class="clipboard-icon" name="content_copy" @click="onCopy($event,item)" /> -->
 		</td>
 
 		<td class="spacer cell" />
@@ -105,6 +114,11 @@ function onCopy(event, item) {
 		border-bottom: var(--theme--border-width) solid var(--theme--border-color-subdued);
 		position: relative;
 
+		// * {
+		// 	cursor: text;
+		// 	user-select: text;
+		// }
+		
 		&:last-child {
 			padding: 0 12px;
 		}
