@@ -44,6 +44,7 @@ const src = computed(() => {
 				:class="{ circle }"
 			/>
 			<span v-if="display === 'name' || display === 'both'">{{ userName(value) }}</span>
+			<slot v-if="display === 'name' || display === 'both'" :copy-value="userName(value)" />
 		</div>
 	</user-popover>
 </template>

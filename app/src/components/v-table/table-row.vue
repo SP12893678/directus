@@ -53,13 +53,13 @@ function onClick(event) {
 	if (window.getSelection().toString()) {
         console.log("event get")
       }
-	// emit('click', event)
+	$emit('click', event)
 }
 
 </script>
 
 <template>
-	<tr class="table-row" :class="{ subdued: subdued, clickable: hasClickListener }" @click="onClick">
+	<tr class="table-row" :class="{ subdued: subdued, clickable: hasClickListener }" @click="$emit('click', $event)">
 		<td v-if="showManualSort" class="manual cell" @click.stop>
 			<v-icon name="drag_handle" class="drag-handle" :class="{ 'sorted-manually': sortedManually }" />
 		</td>

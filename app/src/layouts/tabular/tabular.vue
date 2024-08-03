@@ -158,7 +158,7 @@ function onCopy(event, item) {
 					:collection="header.field.collection"
 					:field="header.field.field"
 				>
-				<v-icon class="clipboard-icon" name="content_copy" @click="onCopy($event,copyValue)" />
+					<v-icon class="clipboard-icon" name="content_copy" @click="onCopy($event,copyValue)" />
 				</render-display>
 				11{{header.field.display}}22
 			</template>
