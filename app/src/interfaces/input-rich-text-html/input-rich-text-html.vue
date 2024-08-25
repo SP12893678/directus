@@ -209,6 +209,7 @@ const editorOptions = computed(() => {
 		paste_data_images: false,
 		setup,
 		...(props.tinymceOverrides || {}),
+		init_content_sync: true,
 	};
 });
 

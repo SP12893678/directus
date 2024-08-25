@@ -245,6 +245,8 @@ export default async function createApp(): Promise<express.Application> {
 		app.get('/admin', sendHtml);
 		app.use('/admin', express.static(path.join(adminPath, '..'), { setHeaders: setStaticHeaders }));
 		app.use('/admin/*', sendHtml);
+
+		app.use('/sw.js', express.static('./src/sw.js'));
 	}
 
 	// use the rate limiter - all routes for now
@@ -323,6 +325,12 @@ export default async function createApp(): Promise<express.Application> {
 	scheduleTusCleanup();
 
 	await emitter.emitInit('app.after', { app });
+
+
+	app.use((req, res, next) => {
+		res.setHeader('Service-Worker-Allowed', '/');
+		next();
+	});
 
 	return app;
 }
